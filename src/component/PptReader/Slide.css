@@ -1,0 +1,10 @@
+.Slide-flex-container {
+    display: -webkit-flex;
+    display: flex;
+    background-color: lightgrey;
+}
+
+.Slide-flex-item {
+    background-color: cornflowerblue;
+    margin: auto;
+}

@@ -4,13 +4,12 @@ import './index.css';
 import App from './component/App/App';
 import Screen from './component/Screen/Screen';
 import Game from './component/TicTacToe/Game';
+import PptReader from './component/PptReader/PptReader';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
     <div>
-        <App />
-        <Screen mycustomtext="test"/>
-        <Game />
+        <PptReader server="ws://localhost:8100"/>
     </div>
     , document.getElementById('root'));
 
