@@ -9,7 +9,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
     <div>
-        <PptReader server="ws://localhost:8100"/>
+        <PptReader server="ws://localhost:8100" idPpt="1_ppt"/>
     </div>
     , document.getElementById('root'));
 
