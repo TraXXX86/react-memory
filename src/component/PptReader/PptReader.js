@@ -11,53 +11,10 @@ class PptReader extends Component {
 
     constructor(props) {
         super(props);
-        this.ws = props.wsclient;
-
-        // Create function to use binding this
-        function doWsCall(event) {
-            var message = JSON.parse(event.data);
-            this.processServerReturn(message);
-        }
-        this.ws.onmessage = doWsCall.bind(this);
-
-        this.ws.send('{ "event":"REQUEST_SLIDE", "meeting":"' + this.props.meeting_id + '", "slide":"' + 1 + '"}');
-
         this.state = {
-            slide_id: 1,
             meeting_id: props.meeting_id,
-            message: null,
-            image: null,
+            ws_client: props.wsclient,
         };
-    }
-
-    /**
-     * Process responses messages
-     * @param message
-     */
-    processServerReturn(message) {
-        let messageToUse = this.state.message;
-        let imageToUse = null;
-        let meetingIdToUse = this.state.meeting_id;
-        let slideToUse = this.state.slide_id;
-        console.log('PptReader : ' + message.event)
-        switch (message.event) {
-            case "SLIDE":
-                slideToUse = message.current;
-                if(message.data != null){
-                    imageToUse = window.atob(message.data);
-                }
-                break;
-            default:
-                break;
-        }
-
-        // Update component status
-        this.setState({
-            meeting_id: meetingIdToUse,
-            message: messageToUse,
-            image: imageToUse,
-            slide_id: slideToUse,
-        })
     }
 
     /**
@@ -65,22 +22,22 @@ class PptReader extends Component {
      * @param slide_id Slide id
      */
     goToSlide(slide_id) {
-        this.ws.send('{ "event": "REQUEST_SLIDE", "meeting":"' + this.state.meeting_id + '", "slide":"' + slide_id + '"}');
+        this.state.ws_client.send('{ "event": "REQUEST_SLIDE", "meeting": {"id": "' + this.state.meeting_id + '"}, "slide":"' + slide_id + '"}');
     }
 
     /**
      * Do WS call to get next slide
      */
-    goToNextSlide() {
-        let numSlideInput = parseInt(this.state.slide_id) + 1;
+    goToNextSlide(slide_id) {
+        let numSlideInput = parseInt(slide_id) + 1;
         this.goToSlide(numSlideInput);
     }
 
     /**
      * Do WS call to get previous slide
      */
-    goToPreviousSlide() {
-        let numSlideInput = parseInt(this.state.slide_id) - 1;
+    goToPreviousSlide(slide_id) {
+        let numSlideInput = parseInt(slide_id) - 1;
         this.goToSlide(numSlideInput);
     }
 
@@ -88,19 +45,19 @@ class PptReader extends Component {
         return (
             <div className="PptReader-flex-container">
                 <header className="PptReader-header">
-                    <div id="message">{this.state.message}</div>
+                    <div id="message">{this.props.message}</div>
                 </header>
                 <article className="PptReader-main">
-                    <Slide image={this.state.image}/>
+                    <Slide image={this.props.image}/>
                 </article>
                 <aside className="PptReader-aside PptReader-aside1">
-                    <NavigationBtn onClick={() => this.goToPreviousSlide()}/>
+                    <NavigationBtn onClick={() => this.goToPreviousSlide(this.props.slide_id)}/>
                 </aside>
                 <aside className="PptReader-aside PptReader-aside2">
-                    <NavigationBtn isNext="true" onClick={() => this.goToNextSlide()}/>
+                    <NavigationBtn isNext="true" onClick={() => this.goToNextSlide(this.props.slide_id)}/>
                 </aside>
                 <footer className="PptReader-footer">
-                    <div>Slide numéro : {this.state.slide_id}</div>
+                    <div>Slide numéro : {this.props.slide_id}</div>
                 </footer>
             </div>
         );
