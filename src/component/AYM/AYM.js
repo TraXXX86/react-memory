@@ -12,6 +12,7 @@ class AYM extends Component {
         function doWsInit(event) {
             ws_client.send('{ "meeting": {"id": "' + this.props.meeting_id + '"}, "event": "REQUEST_JOIN", "user": {"id": "54F12","secret": "BC12"}}');
         }
+
         ws_client.onopen = doWsInit.bind(this);
 
         // Create function to use binding this
@@ -19,6 +20,7 @@ class AYM extends Component {
             var message = JSON.parse(event.data);
             this.processServerReturn(message);
         }
+
         ws_client.onmessage = doWsCall.bind(this);
 
         this.ws_client = ws_client;
@@ -36,25 +38,31 @@ class AYM extends Component {
         let userIdToUse = this.state.user_id;
         let slideToUse = this.state.slide_id;
         let imageToUse = this.state.image;
-
-        console.log('AYM : ' + message.event);
+        let nextSlideToUse = this.state.next_slide;
+        let previousSlideToUse = this.state.previous_slide;
 
         switch (message.event) {
             case "JOIN":
+                // TODO : Update users list
                 meetingToUse = message.meeting;
-                if (message.user != null) {
-                    userIdToUse = message.user.id;
-                    this.ws_client.send('{ "event": "REQUEST_SLIDE", "meeting": {"id": "' + message.meeting.id + '"}, "slide":"' + 1 + '"}');
-                }
                 break;
             case "INFO_MEETING":
-
+                meetingToUse = message.meeting;
+                // Get Image url
+                this.imgServerUri = message.meeting.server.slide_uri;
+                imageToUse = this.generateImgUrl(this.imgServerUri, message.meeting.id, message.meeting.current_slide.id);
+                // Get previous and next slide id
+                let slides_nav = this.processSlidesList(message.meeting.slides, message.meeting.current_slide.id);
+                nextSlideToUse = slides_nav.next;
+                previousSlideToUse = slides_nav.previous;
                 break;
             case "SLIDE":
-                slideToUse = message.current;
-                if(message.data != null){
-                    imageToUse = window.atob(message.data);
-                }
+                slideToUse = message.meeting.current_slide;
+                imageToUse = this.generateImgUrl(this.imgServerUri, message.meeting.id, message.meeting.current_slide.id);
+                // Get previous and next slide id
+                slides_nav = this.processSlidesList(this.state.meeting.slides, message.meeting.current_slide.id);
+                nextSlideToUse = slides_nav.next;
+                previousSlideToUse = slides_nav.previous;
                 break;
             default:
                 break;
@@ -64,16 +72,54 @@ class AYM extends Component {
         this.setState({
             meeting: meetingToUse,
             user_id: userIdToUse,
-            slide_id: slideToUse,
+            slide: slideToUse,
             image: imageToUse,
+            next_slide: nextSlideToUse,
+            previous_slide: previousSlideToUse,
         })
     }
 
+    generateImgUrl(serverPath, meeting_id, slide_id) {
+        // https://xxxxxxxx/{meeting}/slides/{slide}
+        let result = serverPath;
+        result = result.replace('{meeting}', meeting_id);
+        result = result.replace('{slide}', slide_id);
+        return result;
+    }
+
+    processSlidesList(slides, current_slide_id) {
+        let result;
+        let previous = null;
+        let next = null;
+        for (var i = 0; i < slides.length; i++) {
+            if (slides[i].id == current_slide_id) {
+                if (i > 0) {
+                    previous = slides[i - 1].id;
+                }
+                if (i < slides.length - 1) {
+                    next = slides[i + 1].id;
+                }
+                result = {
+                    'previous': previous,
+                    'next': next,
+                };
+                break;
+            }
+        }
+        return result;
+    }
+
     render() {
-        if (this.state.user_id != null) {
+        if (this.state.meeting != null && this.state.slide_id != null) {
             return (
                 <div className="AYM">
-                    <PptReader wsclient={this.ws_client} meeting_id={this.state.meeting.id} slide_id={this.state.slide_id} image={this.state.image} />
+                    <PptReader wsclient={this.ws_client}
+                               meeting_id={this.state.meeting.id}
+                               title={this.state.meeting.title}
+                               slide_title={this.state.slide.title}
+                               image={this.state.image}
+                               next_slide={this.state.next_slide}
+                               previous_slide={this.state.previous_slide}/>
                 </div>
             );
         } else {

@@ -25,39 +25,23 @@ class PptReader extends Component {
         this.state.ws_client.send('{ "event": "REQUEST_SLIDE", "meeting": {"id": "' + this.state.meeting_id + '"}, "slide":"' + slide_id + '"}');
     }
 
-    /**
-     * Do WS call to get next slide
-     */
-    goToNextSlide(slide_id) {
-        let numSlideInput = parseInt(slide_id) + 1;
-        this.goToSlide(numSlideInput);
-    }
-
-    /**
-     * Do WS call to get previous slide
-     */
-    goToPreviousSlide(slide_id) {
-        let numSlideInput = parseInt(slide_id) - 1;
-        this.goToSlide(numSlideInput);
-    }
-
     render() {
         return (
             <div className="PptReader-flex-container">
                 <header className="PptReader-header">
-                    <div id="message">{this.props.message}</div>
+                    <div id="message">{this.props.title}</div>
                 </header>
                 <article className="PptReader-main">
                     <Slide image={this.props.image}/>
                 </article>
                 <aside className="PptReader-aside PptReader-aside1">
-                    <NavigationBtn onClick={() => this.goToPreviousSlide(this.props.slide_id)}/>
+                    <NavigationBtn onClick={() => this.goToSlide(this.props.previous_slide)}/>
                 </aside>
                 <aside className="PptReader-aside PptReader-aside2">
-                    <NavigationBtn isNext="true" onClick={() => this.goToNextSlide(this.props.slide_id)}/>
+                    <NavigationBtn isNext="true" onClick={() => this.goToSlide(this.props.next_slide)}/>
                 </aside>
                 <footer className="PptReader-footer">
-                    <div>Slide numéro : {this.props.slide_id}</div>
+                    <div>{this.props.slide_title}</div>
                 </footer>
             </div>
         );
