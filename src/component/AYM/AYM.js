@@ -10,7 +10,16 @@ class AYM extends Component {
 
         // Create function to use binding this
         function doWsInit(event) {
-            ws_client.send('{ "meeting": {"id": "' + this.props.meeting_id + '"}, "event": "REQUEST_JOIN", "user": {"id": "54F12","secret": "BC12"}}');
+
+            function getRandomInt(max) {
+                return Math.floor(Math.random() * Math.floor(max));
+            }
+
+            let user_id = getRandomInt(19);
+
+            console.log(user_id);
+
+            ws_client.send('{ "meeting": {"id": "' + this.props.meeting_id + '"}, "event": "REQUEST_JOIN", "user": {"id": "' + user_id + '","type": "learner","name": "Psio","avatar": "https://...."}}');
         }
 
         ws_client.onopen = doWsInit.bind(this);
@@ -41,6 +50,16 @@ class AYM extends Component {
         let nextSlideToUse = this.state.next_slide;
         let previousSlideToUse = this.state.previous_slide;
 
+        console.log(message);
+
+        if(message.error){
+            // Update component status
+            this.setState({
+                error: message.error,
+            });
+            return;
+        }
+
         switch (message.event) {
             case "JOIN":
                 // TODO : Update users list
@@ -48,11 +67,13 @@ class AYM extends Component {
                 break;
             case "INFO_MEETING":
                 meetingToUse = message.meeting;
+                slideToUse = message.meeting.current_slide;
                 // Get Image url
                 this.imgServerUri = message.meeting.server.slide_uri;
+                this.slides = message.meeting.slides;
                 imageToUse = this.generateImgUrl(this.imgServerUri, message.meeting.id, message.meeting.current_slide.id);
                 // Get previous and next slide id
-                let slides_nav = this.processSlidesList(message.meeting.slides, message.meeting.current_slide.id);
+                let slides_nav = this.processSlidesList(this.slides, message.meeting.current_slide.id);
                 nextSlideToUse = slides_nav.next;
                 previousSlideToUse = slides_nav.previous;
                 break;
@@ -60,7 +81,7 @@ class AYM extends Component {
                 slideToUse = message.meeting.current_slide;
                 imageToUse = this.generateImgUrl(this.imgServerUri, message.meeting.id, message.meeting.current_slide.id);
                 // Get previous and next slide id
-                slides_nav = this.processSlidesList(this.state.meeting.slides, message.meeting.current_slide.id);
+                slides_nav = this.processSlidesList(this.slides, message.meeting.current_slide.id);
                 nextSlideToUse = slides_nav.next;
                 previousSlideToUse = slides_nav.previous;
                 break;
@@ -76,6 +97,7 @@ class AYM extends Component {
             image: imageToUse,
             next_slide: nextSlideToUse,
             previous_slide: previousSlideToUse,
+            error: null,
         })
     }
 
@@ -113,6 +135,7 @@ class AYM extends Component {
         if (this.state.meeting != null && this.state.slide_id != null) {
             return (
                 <div className="AYM">
+                    <div>{this.state.error}</div>
                     <PptReader wsclient={this.ws_client}
                                meeting_id={this.state.meeting.id}
                                title={this.state.meeting.title}

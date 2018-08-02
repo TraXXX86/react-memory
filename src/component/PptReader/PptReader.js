@@ -22,7 +22,7 @@ class PptReader extends Component {
      * @param slide_id Slide id
      */
     goToSlide(slide_id) {
-        this.state.ws_client.send('{ "event": "REQUEST_SLIDE", "meeting": {"id": "' + this.state.meeting_id + '"}, "slide":"' + slide_id + '"}');
+        this.state.ws_client.send('{ "event": "REQUEST_SLIDE", "meeting": {"id": "' + this.state.meeting_id + '", "current_slide": {"id": "' + slide_id + '"}}}');
     }
 
     render() {
