@@ -14,6 +14,7 @@ class PptReader extends Component {
         this.state = {
             meeting_id: props.meeting_id,
             ws_client: props.wsclient,
+            read_only: props.read_only,
         };
     }
 
@@ -34,12 +35,16 @@ class PptReader extends Component {
                 <article className="PptReader-main">
                     <Slide image={this.props.image}/>
                 </article>
-                <aside className="PptReader-aside PptReader-aside1">
-                    <NavigationBtn onClick={() => this.goToSlide(this.props.previous_slide)}/>
-                </aside>
-                <aside className="PptReader-aside PptReader-aside2">
-                    <NavigationBtn isNext="true" onClick={() => this.goToSlide(this.props.next_slide)}/>
-                </aside>
+
+                {!this.state.read_only ?
+                        <aside className="PptReader-aside PptReader-aside1">
+                            <NavigationBtn onClick={() => this.goToSlide(this.props.previous_slide)}/>
+                        </aside> : ''}
+                {!this.state.read_only ?
+                        <aside className="PptReader-aside PptReader-aside2">
+                            <NavigationBtn isNext="true" onClick={() => this.goToSlide(this.props.next_slide)}/>
+                        </aside> : ''}
+
                 <footer className="PptReader-footer">
                     <div>{this.props.slide_title}</div>
                 </footer>

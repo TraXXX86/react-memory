@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import './AYM.css';
 import PptReader from '../PptReader/PptReader';
+import Authentification from '../Authentification/Authentification';
+import UserViewer from '../UserViewer/UserViewer';
+
 
 class AYM extends Component {
 
@@ -11,15 +14,9 @@ class AYM extends Component {
         // Create function to use binding this
         function doWsInit(event) {
 
-            function getRandomInt(max) {
-                return Math.floor(Math.random() * Math.floor(max));
-            }
+            console.log('REQUEST_JOIN for user : ' + props.user_id);
 
-            let user_id = getRandomInt(19);
-
-            console.log(user_id);
-
-            ws_client.send('{ "meeting": {"id": "' + this.props.meeting_id + '"}, "event": "REQUEST_JOIN", "user": {"id": "' + user_id + '","type": "learner","name": "Psio","avatar": "https://...."}}');
+            ws_client.send('{ "meeting": {"id": "' + this.props.meeting_id + '"}, "event": "REQUEST_JOIN", "user": {"id": "' + props.user_id + '","type": "' + props.user_profil + '","name": "' + props.user_name + '","avatar": "https://...."}}');
         }
 
         ws_client.onopen = doWsInit.bind(this);
@@ -31,10 +28,11 @@ class AYM extends Component {
         }
 
         ws_client.onmessage = doWsCall.bind(this);
-
         this.ws_client = ws_client;
         this.state = {
             slide_id: 1,
+            read_only: props.user_profil === 'learner',
+            current_user_name: props.user_name,
         };
     }
 
@@ -43,12 +41,14 @@ class AYM extends Component {
      * @param message
      */
     processServerReturn(message) {
+        // TODO : Update a partial state with syntax [name]: value
         let meetingToUse = this.state.meeting;
         let userIdToUse = this.state.user_id;
         let slideToUse = this.state.slide_id;
         let imageToUse = this.state.image;
         let nextSlideToUse = this.state.next_slide;
         let previousSlideToUse = this.state.previous_slide;
+        let usersToUse = this.state.users;
 
         console.log(message);
 
@@ -64,10 +64,16 @@ class AYM extends Component {
             case "JOIN":
                 // TODO : Update users list
                 meetingToUse = message.meeting;
+                if(usersToUse != null){
+                    usersToUse.push(message.user);
+                }
+                console.log('JOIN for user : ' + message.user.id + ' ' + message.user.name);
                 break;
             case "INFO_MEETING":
                 meetingToUse = message.meeting;
                 slideToUse = message.meeting.current_slide;
+                usersToUse = message.meeting.users;
+                console.log('INFO_MEETING : Meeting[' + meetingToUse.id + '] Slide[' + slideToUse.id + ']');
                 // Get Image url
                 this.imgServerUri = message.meeting.server.slide_uri;
                 this.slides = message.meeting.slides;
@@ -79,6 +85,7 @@ class AYM extends Component {
                 break;
             case "SLIDE":
                 slideToUse = message.meeting.current_slide;
+                console.log('SLIDE : Meeting[' + meetingToUse.id + '] Slide[' + slideToUse.id + ']');
                 imageToUse = this.generateImgUrl(this.imgServerUri, message.meeting.id, message.meeting.current_slide.id);
                 // Get previous and next slide id
                 slides_nav = this.processSlidesList(this.slides, message.meeting.current_slide.id);
@@ -97,10 +104,18 @@ class AYM extends Component {
             image: imageToUse,
             next_slide: nextSlideToUse,
             previous_slide: previousSlideToUse,
+            users: usersToUse,
             error: null,
         })
     }
 
+    /**
+     * Generate url to get Slide image jpg
+     * @param serverPath : URL tempalte
+     * @param meeting_id : meeting id which will be replaced {meeting} pattern into URL template
+     * @param slide_id : slide id which will be replaced {meeting} pattern into URL template
+     * @return URL use to get Slide image jpg
+     */
     generateImgUrl(serverPath, meeting_id, slide_id) {
         // https://xxxxxxxx/{meeting}/slides/{slide}
         let result = serverPath;
@@ -109,12 +124,18 @@ class AYM extends Component {
         return result;
     }
 
+    /**
+     * Calcul the next and previous slide ID
+     * @param slides : Ordered slides list
+     * @param current_slide_id : Current slide ID
+     * @return Array with keys 'previous' and 'next'
+     */
     processSlidesList(slides, current_slide_id) {
         let result;
         let previous = null;
         let next = null;
         for (var i = 0; i < slides.length; i++) {
-            if (slides[i].id == current_slide_id) {
+            if (slides[i].id === current_slide_id) {
                 if (i > 0) {
                     previous = slides[i - 1].id;
                 }
@@ -136,19 +157,22 @@ class AYM extends Component {
             return (
                 <div className="AYM">
                     <div>{this.state.error}</div>
+                    <div>Current User Name : {this.state.current_user_name}</div>
                     <PptReader wsclient={this.ws_client}
                                meeting_id={this.state.meeting.id}
                                title={this.state.meeting.title}
                                slide_title={this.state.slide.title}
                                image={this.state.image}
                                next_slide={this.state.next_slide}
-                               previous_slide={this.state.previous_slide}/>
+                               previous_slide={this.state.previous_slide}
+                               read_only={this.state.read_only}/>
+                    <UserViewer users={this.state.users}/>
                 </div>
             );
         } else {
             return (
                 <div className="AYM">
-                    Connectes toi !
+                    <Authentification />
                 </div>
             );
         }

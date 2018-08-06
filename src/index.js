@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import AYM from './component/AYM/AYM';
+import Authentification from './component/Authentification/Authentification';
 
 import { createStore } from 'redux'
 
@@ -40,7 +40,7 @@ store.dispatch({ type: 'INCREMENT' })
 
 ReactDOM.render(
     <div>
-        <AYM server="ws://localhost:8100" meeting_id="1_ppt" store={store} />
+        <Authentification store={store}/>
     </div>
     , document.getElementById('root'));
 
