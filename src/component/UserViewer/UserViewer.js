@@ -14,7 +14,7 @@ class UserViewer extends Component {
                     <ul>
                         {users.map((user) => {
                             if(user.name != 'Psio'){
-                                   return <li id={user.id}>{user.name}</li>
+                                   return <li>{user.name}</li>
                                 }
                             }
                         )}

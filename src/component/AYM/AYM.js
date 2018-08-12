@@ -30,7 +30,9 @@ class AYM extends Component {
         ws_client.onmessage = doWsCall.bind(this);
         this.ws_client = ws_client;
         this.state = {
-            slide_id: 1,
+            slide: {
+                id: 1
+            },
             read_only: props.user_profil === 'learner',
             current_user_name: props.user_name,
         };
@@ -44,7 +46,7 @@ class AYM extends Component {
         // TODO : Update a partial state with syntax [name]: value
         let meetingToUse = this.state.meeting;
         let userIdToUse = this.state.user_id;
-        let slideToUse = this.state.slide_id;
+        let slideToUse = this.state.slide;
         let imageToUse = this.state.image;
         let nextSlideToUse = this.state.next_slide;
         let previousSlideToUse = this.state.previous_slide;
@@ -153,7 +155,7 @@ class AYM extends Component {
     }
 
     render() {
-        if (this.state.meeting != null && this.state.slide_id != null) {
+        if (this.state.meeting != null && this.state.slide != null) {
             return (
                 <div className="AYM">
                     <div>{this.state.error}</div>

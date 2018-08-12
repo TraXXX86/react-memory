@@ -1,46 +1,68 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+    BrowserRouter as Router,
+    Route,
+    Link
+} from 'react-router-dom'
 import './index.css';
+import registerServiceWorker from './registerServiceWorker';
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {faSignInAlt, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
+import HomeScreen from './component/AYM/HomeScreen';
+import CreateMeetingScreen from './component/AYM/CreateMeetingScreen';
 import Authentification from './component/Authentification/Authentification';
 
-import { createStore } from 'redux'
 
-import registerServiceWorker from './registerServiceWorker';
+// Add all font awesome icons :
+library.add(faSignInAlt, faPlusCircle);
 
-function reduceFunction(state = 0, action) {
-    return  action.type === 'INCREMENT' ? state + 1
-        : action.type === 'DECREMENT' ? state - 1
-        : state;
-}
-
-const store = createStore(reduceFunction);
-
-store.subscribe(() =>
-    console.log(store.getState())
+const Home = () => (
+    <div>
+        <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/create_meeting">Create meeting</Link></li>
+            <li><Link to="/authentification">Connection</Link></li>
+        </ul>
+        <HomeScreen />
+    </div>
 )
 
-/*
- function counter(state = 0, action) {
- return  action.type === 'INCREMENT' ? state + 1
- : action.type === 'DECREMENT' ? state - 1
- : state;
- }
+const CreateMeeting = () => (
+    <div>
+        <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/create_meeting">Create meeting</Link></li>
+            <li><Link to="/authentification">Connection</Link></li>
+        </ul>
+        <CreateMeetingScreen />
+    </div>
+)
 
-let store = createStore(counter);
- store.subscribe(() =>
- console.log(store.getState())
- )
- store.dispatch({ type: 'INCREMENT' }) // 1*/
+const AuthentificationScreen = () => (
+    <div>
+        <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/create_meeting">Create meeting</Link></li>
+            <li><Link to="/authentification">Connection</Link></li>
+        </ul>
+        <Authentification />
+    </div>
+)
 
-store.dispatch({ type: 'INCREMENT' })
-store.dispatch({ type: 'INCREMENT' })
-store.dispatch({ type: 'INCREMENT' })
-
-// "ws://192.168.1.65:8082"
+const BasicExample = () => (
+    <Router>
+        <div>
+            <Route exact path="/" component={Home}/>
+            <Route path="/create_meeting" component={CreateMeeting}/>
+            <Route path="/authentification" component={AuthentificationScreen}/>
+        </div>
+    </Router>
+)
 
 ReactDOM.render(
     <div>
-        <Authentification store={store}/>
+        <BasicExample />
     </div>
     , document.getElementById('root'));
 
