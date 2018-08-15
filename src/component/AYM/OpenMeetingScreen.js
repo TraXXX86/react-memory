@@ -1,13 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import {withRouter} from 'react-router-dom'
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -36,21 +35,16 @@ const styles = theme => ({
     },
 });
 
-class CreateMeetingScreen extends React.Component {
+class OpenMeetingScreen extends Component {
     constructor(props) {
         super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.pptInput = React.createRef();
-        this.avatarInput = React.createRef();
-
         this.state = {
             user_name: 'Maxime',
-            user_profil: 'trainer',
+            user_profil: 'learner',
             meeting_id: '5b7438ec4de4b',
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     /**
@@ -64,30 +58,10 @@ class CreateMeetingScreen extends React.Component {
         });
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-        if (this.pptInput.current.files[0] != null) {
-            var inputFile = this.pptInput.current.files[0];
-
-            var fileReader = new FileReader();
-            fileReader.readAsBinaryString(inputFile);
-
-            alert(
-                `Selected file - ${
-                    inputFile.name
-                    }`
-            );
-        } else {
-            alert(
-                `No file selected`
-            );
-        }
-    }
-
     render() {
         const {classes} = this.props;
         return (
-            <div style={{flex: 1}}>
+            <div className="OpenMeetingScreen">
                 <div className={classes.root}>
                     <AppBar position="static">
                         <Toolbar>
@@ -106,7 +80,7 @@ class CreateMeetingScreen extends React.Component {
                 </div>
                 <div className={classes.root} style={{padding: "40px"}}>
                     <Typography variant="title" color="inherit">
-                        Configure your meeting
+                        Join a meeting
                     </Typography>
                 </div>
                 <form onSubmit={() => this.props.history.push('/meeting', this.state)}>
@@ -149,31 +123,15 @@ class CreateMeetingScreen extends React.Component {
                                style={{paddingLeft: '25px', marginTop: '15px'}}
                                accept="image/*"/>
                     </div>
-                    <div className={classes.margin}
-                         style={{position: 'relative', marginTop: '25px'}}>
-                        <div>
-                            <InputLabel htmlFor="input-with-icon-adornment">Add your PowerPoint</InputLabel>
-                        </div>
-                        <FontAwesomeIcon icon="file-powerpoint" style={{left: 0, top: 24, width: 24, height: 24}}/>
-                        <input label="Upload file :"
-                               id="input-with-icon-grid"
-                               type="file"
-                               ref={this.pptInput}
-                               style={{paddingLeft: '25px', marginTop: '15px'}}
-                               accept=".ppt,.pptx"/>
-                    </div>
                     <Button type="submit" variant="contained" color="primary" className={classes.button}
                             style={{marginTop: '30px'}}>
-                        <FontAwesomeIcon className={classes.leftIcon} icon="check"/>
-                        Create
+                        <FontAwesomeIcon className={classes.leftIcon} icon="sign-in-alt"/>
+                        Join a meeting
                     </Button>
                 </form>
-            </div>)
+            </div>
+        );
     }
 }
 
-CreateMeetingScreen.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(CreateMeetingScreen));
+export default withRouter(withStyles(styles)(OpenMeetingScreen));

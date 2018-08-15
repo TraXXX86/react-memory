@@ -8,61 +8,30 @@ import {
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faSignInAlt, faPlusCircle} from '@fortawesome/free-solid-svg-icons'
+import {faSignInAlt, faPlusCircle, faFilePowerpoint, faFont, faUser, faGlobe, faArrowCircleLeft, faArrowCircleRight, faHome, faCheck} from '@fortawesome/free-solid-svg-icons'
 import HomeScreen from './component/AYM/HomeScreen';
 import CreateMeetingScreen from './component/AYM/CreateMeetingScreen';
-import Authentification from './component/Authentification/Authentification';
+import OpenMeetingScreen from './component/AYM/OpenMeetingScreen';
+import MeetingScreen from './component/AYM/MeetingScreen';
 
 
 // Add all font awesome icons :
-library.add(faSignInAlt, faPlusCircle);
+library.add(faSignInAlt, faPlusCircle, faFilePowerpoint, faFont, faUser, faGlobe, faArrowCircleLeft, faArrowCircleRight, faHome, faCheck);
 
-const Home = () => (
-    <div>
-        <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/create_meeting">Create meeting</Link></li>
-            <li><Link to="/authentification">Connection</Link></li>
-        </ul>
-        <HomeScreen />
-    </div>
-)
-
-const CreateMeeting = () => (
-    <div>
-        <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/create_meeting">Create meeting</Link></li>
-            <li><Link to="/authentification">Connection</Link></li>
-        </ul>
-        <CreateMeetingScreen />
-    </div>
-)
-
-const AuthentificationScreen = () => (
-    <div>
-        <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/create_meeting">Create meeting</Link></li>
-            <li><Link to="/authentification">Connection</Link></li>
-        </ul>
-        <Authentification />
-    </div>
-)
-
-const BasicExample = () => (
+const Root = () => (
     <Router>
         <div>
-            <Route exact path="/" component={Home}/>
-            <Route path="/create_meeting" component={CreateMeeting}/>
-            <Route path="/authentification" component={AuthentificationScreen}/>
+            <Route exact path="/" component={HomeScreen}/>
+            <Route path="/create_meeting" component={CreateMeetingScreen}/>
+            <Route path="/open_meeting" component={OpenMeetingScreen}/>
+            <Route path="/meeting" component={MeetingScreen}/>
         </div>
     </Router>
 )
 
 ReactDOM.render(
     <div>
-        <BasicExample />
+        <Root />
     </div>
     , document.getElementById('root'));
 

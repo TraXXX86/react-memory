@@ -1,9 +1,32 @@
 import React, {Component} from 'react';
-import './AYM.css';
+//import './AYM.css';
+import {withStyles} from '@material-ui/core/styles';
+import {withRouter} from 'react-router-dom'
 import PptReader from '../PptReader/PptReader';
-import Authentification from '../Authentification/Authentification';
+import OpenMeetingScreen from './OpenMeetingScreen';
 import UserViewer from '../UserViewer/UserViewer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+    },
+    flex: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginLeft: -5,
+        marginRight: 20,
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
+});
 
 class AYM extends Component {
 
@@ -54,7 +77,7 @@ class AYM extends Component {
 
         console.log(message);
 
-        if(message.error){
+        if (message.error) {
             // Update component status
             this.setState({
                 error: message.error,
@@ -66,7 +89,7 @@ class AYM extends Component {
             case "JOIN":
                 // TODO : Update users list
                 meetingToUse = message.meeting;
-                if(usersToUse != null){
+                if (usersToUse != null) {
                     usersToUse.push(message.user);
                 }
                 console.log('JOIN for user : ' + message.user.id + ' ' + message.user.name);
@@ -155,9 +178,27 @@ class AYM extends Component {
     }
 
     render() {
+        const {classes} = this.props;
+
         if (this.state.meeting != null && this.state.slide != null) {
             return (
                 <div className="AYM">
+                    <div className={classes.root}>
+                        <AppBar position="static">
+                            <Toolbar>
+                                <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                                    <FontAwesomeIcon color="inherit" aria-label="Menu"
+                                                     icon="arrow-circle-left"
+                                                     style={{left: 0, top: 24, width: 24, height: 24}}
+                                                     onClick={() => this.props.history.goBack()}/>
+                                </IconButton>
+                                <Typography variant="title" color="inherit" className={classes.flex}>
+                                    Animate your meeting
+                                </Typography>
+                                {/*<Button color="inherit">Login</Button>*/}
+                            </Toolbar>
+                        </AppBar>
+                    </div>
                     <div>{this.state.error}</div>
                     <div>Current User Name : {this.state.current_user_name}</div>
                     <PptReader wsclient={this.ws_client}
@@ -174,11 +215,29 @@ class AYM extends Component {
         } else {
             return (
                 <div className="AYM">
-                    <Authentification />
+                    <div className={classes.root}>
+                        <AppBar position="static">
+                            <Toolbar>
+                                <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                                    <FontAwesomeIcon color="inherit" aria-label="Menu"
+                                                     icon="arrow-circle-left"
+                                                     style={{left: 0, top: 24, width: 24, height: 24}}
+                                                     onClick={() => this.props.history.goBack()}/>
+                                </IconButton>
+                                <Typography variant="title" color="inherit" className={classes.flex}>
+                                    Animate your meeting
+                                </Typography>
+                                {/*<Button color="inherit">Login</Button>*/}
+                            </Toolbar>
+                        </AppBar>
+                    </div>
+                    <div>
+                        <CircularProgress className={classes.progress} size={50}/>
+                    </div>
                 </div>
             );
         }
     }
 }
 
-export default AYM;
+export default withRouter(withStyles(styles)(AYM));
