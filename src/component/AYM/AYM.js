@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import {withRouter} from 'react-router-dom'
 import PptReader from '../PptReader/PptReader';
-import OpenMeetingScreen from './OpenMeetingScreen';
 import UserViewer from '../UserViewer/UserViewer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';

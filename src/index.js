@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {
     BrowserRouter as Router,
-    Route,
-    Link
+    Route
 } from 'react-router-dom'
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
@@ -13,7 +12,6 @@ import HomeScreen from './component/AYM/HomeScreen';
 import CreateMeetingScreen from './component/AYM/CreateMeetingScreen';
 import OpenMeetingScreen from './component/AYM/OpenMeetingScreen';
 import MeetingScreen from './component/AYM/MeetingScreen';
-
 
 // Add all font awesome icons :
 library.add(faSignInAlt, faPlusCircle, faFilePowerpoint, faFont, faUser, faGlobe, faArrowCircleLeft, faArrowCircleRight, faHome, faCheck);
