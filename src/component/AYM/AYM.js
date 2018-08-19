@@ -9,6 +9,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 import AYMUserMenu from '../AYMUserMenu';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
@@ -177,6 +179,14 @@ class AYM extends Component {
         return result;
     }
 
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ error: null });
+    };
+
     render() {
         const {classes} = this.props;
 
@@ -199,8 +209,32 @@ class AYM extends Component {
                             </Toolbar>
                         </AppBar>
                     </div>
-                    <div>{this.state.error}</div>
-                    <div>Current User Name : {this.state.current_user_name}</div>
+                    <div>
+                        <Snackbar
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            open={this.state.error}
+                            autoHideDuration={6000}
+                            onClose={this.handleClose}
+                            ContentProps={{
+                                'aria-describedby': 'message-id',
+                            }}
+                            message={<span id="message-id">{this.state.error}</span>}
+                            action={[
+                                <IconButton
+                                    key="close"
+                                    aria-label="Close"
+                                    color="inherit"
+                                    className={classes.close}
+                                    onClick={this.handleClose}
+                                >
+                                    <CloseIcon />
+                                </IconButton>,
+                            ]}
+                        />
+                    </div>
                     <PptReader wsclient={this.ws_client}
                                meeting_id={this.state.meeting.id}
                                title={this.state.meeting.title}

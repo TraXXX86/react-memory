@@ -17,10 +17,10 @@
     background: cornflowerblue;
 }
 
-.PptReader-header {background: coral;}
+/*.PptReader-header {background: coral;}
 .PptReader-footer {background: lightgreen;}
 .PptReader-aside1 {background: moccasin;}
-.PptReader-aside2 {background: violet;}
+.PptReader-aside2 {background: violet;}*/
 
 @media screen and (min-width: 600px) {
     .PptReader-aside { flex: 1 0px; }
