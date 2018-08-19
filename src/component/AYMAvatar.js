@@ -15,9 +15,9 @@ const styles = theme => ({
 class AYMAvatar extends React.Component {
     render() {
         const {classes} = this.props;
-        var isTrainer = this.props.profil == 'trainer';
+        var isTrainer = this.props.profil === 'trainer';
 
-        if (this.props.img == null || this.props.img === '') {
+        if (this.props.img === null || this.props.img === '') {
             if (isTrainer) {
                 return (
                     <Badge badgeContent={<FontAwesomeIcon icon="chalkboard-teacher" style={{left: 0, top: 24, width: 24, height: 24}}/>}

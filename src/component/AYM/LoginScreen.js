@@ -61,7 +61,7 @@ class LoginScreen extends Component {
      * @param event
      */
     handleChange(event) {
-        if (event.target.id == 'user_avatar') {
+        if (event.target.id === 'user_avatar') {
             const file = event.target.files[0];
             getBase64(file).then(base64 => {
                 localStorage["user_avatar_tmp"] = base64;
