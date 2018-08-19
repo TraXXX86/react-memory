@@ -10,6 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import AYMUserMenu from '../AYMUserMenu';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
@@ -43,9 +44,12 @@ class CreateMeetingScreen extends React.Component {
         this.pptInput = React.createRef();
         this.avatarInput = React.createRef();
 
+        var current_user = localStorage.getItem('current_user');
+        current_user =  JSON.parse(current_user);
+
         this.state = {
-            user_name: 'Maxime',
-            user_profil: 'trainer',
+            user_name: current_user.user_name,
+            user_profil: current_user.user_profil,
             meeting_id: '5b7438ec4de4b',
         };
 
@@ -100,7 +104,7 @@ class CreateMeetingScreen extends React.Component {
                             <Typography variant="title" color="inherit" className={classes.flex}>
                                 Animate your meeting
                             </Typography>
-                            {/*<Button color="inherit">Login</Button>*/}
+                            <AYMUserMenu />
                         </Toolbar>
                     </AppBar>
                 </div>
@@ -122,32 +126,6 @@ class CreateMeetingScreen extends React.Component {
                                            label="Choose a meeting room :"/>
                             </Grid>
                         </Grid>
-                    </div>
-                    <div className={classes.margin}>
-                        <Grid container spacing={8} alignItems="flex-end">
-                            <Grid item>
-                                <FontAwesomeIcon icon="font" style={{left: 0, top: 24, width: 24, height: 24}}/>
-                            </Grid>
-                            <Grid item>
-                                <TextField id="user_name" type="text"
-                                           value={this.state.user_name}
-                                           onChange={this.handleChange}
-                                           label="Your name :"/>
-                            </Grid>
-                        </Grid>
-                    </div>
-                    <div className={classes.margin}
-                         style={{position: 'relative', marginTop: '25px'}}>
-                        <div>
-                            <InputLabel htmlFor="input-with-icon-adornment">Choose your avatar</InputLabel>
-                        </div>
-                        <FontAwesomeIcon icon="user" style={{left: 0, top: 24, width: 24, height: 24}}/>
-                        <input label="Upload file :"
-                               id="input-with-icon-grid"
-                               type="file"
-                               ref={this.avatarInput}
-                               style={{paddingLeft: '25px', marginTop: '15px'}}
-                               accept="image/*"/>
                     </div>
                     <div className={classes.margin}
                          style={{position: 'relative', marginTop: '25px'}}>

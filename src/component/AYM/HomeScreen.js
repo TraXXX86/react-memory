@@ -7,6 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import AYMUserMenu from '../AYMUserMenu';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
@@ -39,7 +40,6 @@ const styles = theme => ({
 class Home extends React.Component {
     render() {
         const {classes} = this.props;
-
         return (
             <div style={{flex: 1}}>
                 <div className={classes.root}>
@@ -53,7 +53,7 @@ class Home extends React.Component {
                             <Typography variant="title" color="inherit" className={classes.flex}>
                                 Animate your meeting
                             </Typography>
-                            {/*<Button color="inherit">Login</Button>*/}
+                            <AYMUserMenu />
                         </Toolbar>
                     </AppBar>
                 </div>

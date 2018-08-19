@@ -5,21 +5,36 @@ import {
     Route
 } from 'react-router-dom'
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
+//import registerServiceWorker from './registerServiceWorker';
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faSignInAlt, faPlusCircle, faFilePowerpoint, faFont, faUser, faGlobe, faArrowCircleLeft, faArrowCircleRight, faHome, faCheck} from '@fortawesome/free-solid-svg-icons'
+import {
+    faSignInAlt,
+    faSignOutAlt,
+    faPlusCircle,
+    faFilePowerpoint,
+    faFont,
+    faUser,
+    faGlobe,
+    faArrowCircleLeft,
+    faArrowCircleRight,
+    faHome,
+    faCheck,
+    faChalkboardTeacher
+} from '@fortawesome/free-solid-svg-icons'
 import HomeScreen from './component/AYM/HomeScreen';
+import LoginScreen from './component/AYM/LoginScreen';
 import CreateMeetingScreen from './component/AYM/CreateMeetingScreen';
 import OpenMeetingScreen from './component/AYM/OpenMeetingScreen';
 import MeetingScreen from './component/AYM/MeetingScreen';
 
 // Add all font awesome icons :
-library.add(faSignInAlt, faPlusCircle, faFilePowerpoint, faFont, faUser, faGlobe, faArrowCircleLeft, faArrowCircleRight, faHome, faCheck);
+library.add(faSignInAlt, faSignOutAlt, faPlusCircle, faFilePowerpoint, faFont, faUser, faGlobe, faArrowCircleLeft, faArrowCircleRight, faHome, faCheck, faChalkboardTeacher);
 
 const Root = () => (
     <Router>
         <div>
             <Route exact path="/" component={HomeScreen}/>
+            <Route path="/login" component={LoginScreen}/>
             <Route path="/create_meeting" component={CreateMeetingScreen}/>
             <Route path="/open_meeting" component={OpenMeetingScreen}/>
             <Route path="/meeting" component={MeetingScreen}/>
@@ -33,4 +48,4 @@ ReactDOM.render(
     </div>
     , document.getElementById('root'));
 
-registerServiceWorker();
+//registerServiceWorker();
