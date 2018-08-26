@@ -26,7 +26,9 @@ class MeetingScreen extends React.Component {
             if(search_params.get('type') != null){
                 user_profil = search_params.get('type');
             }
-
+	    if(search_params.get('uid') != null){
+		user_name  = search_params.get('uid');
+	    }
         }
         if(server_url == null || server_url === ''){
             // TODO : set server adress here
